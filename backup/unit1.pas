@@ -41,6 +41,7 @@ type
     procedure BitBtn1Click(Sender: TObject);
     procedure BitBtn2Click(Sender: TObject);
     procedure BitBtn3Click(Sender: TObject);
+    procedure BitBtn4Click(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure TrayIcon1DblClick(Sender: TObject);
@@ -99,6 +100,24 @@ begin
   finally
     OpenDialog1.Free;
   end;
+end;
+
+procedure TForm1.BitBtn4Click(Sender: TObject);
+begin
+  // Converter os dados para JSON
+  JsonObject := TJSONObject.Create;
+  JsonObject.Add('usr', Edit1.Text);
+  JsonObject.Add('pwd', Edit2.Text);
+  JsonObject.Add('file', Edit3.Text);
+  JsonObject.Add('sheet', Edit4.Text);
+  JsonObject.Add('column', Edit5.Text);
+  JsonObject.Add('line', Edit6.Text);
+  JsonObject.Add('URLlogin', Edit7.Text);
+  JsonObject.Add('URLrota', Edit8.Text);
+  JsonObject.Add('log', Edit9.Text);
+  JSONString := JsonObject.FormatJSON();
+  EscreverArquivoTexto('rotas.json', JSONString);
+  MessageDlg('Informação', 'Configuração salva com sucesso!', mtInformation, [mbOK], 0);
 end;
 
 procedure TForm1.FormClose(Sender: TObject; var CloseAction: TCloseAction);

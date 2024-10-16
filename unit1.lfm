@@ -3,6 +3,7 @@ object Form1: TForm1
   Height = 376
   Top = 153
   Width = 474
+  BorderStyle = bsDialog
   Caption = 'Rotas'
   ClientHeight = 376
   ClientWidth = 474
@@ -305,6 +306,7 @@ object Form1: TForm1
     Top = 88
     Width = 99
     Caption = 'Pesquisar'
+    Default = True
     Glyph.Data = {
       36090000424D3609000000000000360000002800000018000000180000000100
       2000000000000009000064000000640000000000000000000000FFFFFF00FFFF
