@@ -6,8 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, Buttons,
-  StdCtrls, ShellApi, fpjson, jsonparser;
-  // LCLIntf, FileUtil, StdCtrls;
+  StdCtrls, ShellApi, fpjson, jsonparser, Unit2;
 
 type
 
@@ -18,23 +17,18 @@ type
     BitBtn2: TBitBtn;
     BitBtn3: TBitBtn;
     BitBtn4: TBitBtn;
-    Edit1: TEdit;
-    Edit2: TEdit;
+    BitBtn5: TBitBtn;
+    BitBtn6: TBitBtn;
+    BitBtn7: TBitBtn;
     Edit3: TEdit;
     Edit4: TEdit;
     Edit5: TEdit;
     Edit6: TEdit;
-    Edit7: TEdit;
-    Edit8: TEdit;
     Edit9: TEdit;
-    Label1: TLabel;
-    Label2: TLabel;
     Label3: TLabel;
     Label4: TLabel;
     Label5: TLabel;
     Label6: TLabel;
-    Label7: TLabel;
-    Label8: TLabel;
     Label9: TLabel;
     OpenDialog1: TOpenDialog;
     TrayIcon1: TTrayIcon;
@@ -42,6 +36,9 @@ type
     procedure BitBtn2Click(Sender: TObject);
     procedure BitBtn3Click(Sender: TObject);
     procedure BitBtn4Click(Sender: TObject);
+    procedure BitBtn5Click(Sender: TObject);
+    procedure BitBtn6Click(Sender: TObject);
+    procedure BitBtn7Click(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure TrayIcon1DblClick(Sender: TObject);
@@ -56,6 +53,7 @@ var
   Form1: TForm1;
   JSONString: String;
   JsonObject: TJSONObject;
+  ArquivoLog: String;
 
 implementation
 
@@ -83,7 +81,7 @@ begin
   ProgramPath := StringReplace(ProgramPath, '\', '/', [rfReplaceAll]);
 
   // Roda o robô
-  ShellExecute(0, 'open', PChar(ProgramPath), '', '', 1);
+  ShellExecute(0, 'open', PChar(ProgramPath), '', '', 2);
 end;
 
 procedure TForm1.BitBtn3Click(Sender: TObject);
@@ -106,18 +104,47 @@ procedure TForm1.BitBtn4Click(Sender: TObject);
 begin
   // Converter os dados para JSON
   JsonObject := TJSONObject.Create;
-  JsonObject.Add('usr', Edit1.Text);
-  JsonObject.Add('pwd', Edit2.Text);
   JsonObject.Add('file', Edit3.Text);
   JsonObject.Add('sheet', Edit4.Text);
   JsonObject.Add('column', Edit5.Text);
   JsonObject.Add('line', Edit6.Text);
-  JsonObject.Add('URLlogin', Edit7.Text);
-  JsonObject.Add('URLrota', Edit8.Text);
-  JsonObject.Add('log', Edit9.Text);
+  ArquivoLog := Edit9.Text;
+  JsonObject.Add('log', ArquivoLog);
   JSONString := JsonObject.FormatJSON();
   EscreverArquivoTexto('rotas.json', JSONString);
   MessageDlg('Informação', 'Configuração salva com sucesso!', mtInformation, [mbOK], 0);
+end;
+
+procedure TForm1.BitBtn5Click(Sender: TObject);
+var
+  AppDir, ProgramPath : String;
+begin
+  // Obter o diretório do executável da aplicação
+  AppDir := ExtractFilePath(Application.ExeName);
+
+  // Construir o caminho completo para o arquivo HTML "geocall.html"
+  ProgramPath := AppDir + 'geocall.html';
+  ProgramPath := StringReplace(ProgramPath, '\', '/', [rfReplaceAll]);
+
+  // Use ShellExecute para abrir o arquivo no Chrome ou no programa padrão associado
+  ShellExecute(0, 'open', PChar(ProgramPath), nil, nil, 1);
+end;
+
+procedure TForm1.BitBtn6Click(Sender: TObject);
+var
+  caminhoCompleto: string;
+begin
+  // Obtém o caminho completo do arquivo no mesmo diretório que o executável
+  caminhoCompleto := ExtractFilePath(Application.ExeName) + ArquivoLog;
+
+  // Abre o Bloco de Notas com o arquivo especificado
+  ShellExecute(0, 'open', 'notepad.exe', PChar(caminhoCompleto), nil, 1);
+end;
+
+procedure TForm1.BitBtn7Click(Sender: TObject);
+begin
+  Form2 := TForm2.Create(Self);
+  Form2.Show();
 end;
 
 procedure TForm1.FormClose(Sender: TObject; var CloseAction: TCloseAction);
@@ -135,15 +162,12 @@ begin
   JsonObject := GetJSON(JSONString) as TJSONObject;
 
   // Atribuindo os valores do JSON ao registro
-  Edit1.Text := JsonObject.Get('usr', '');
-  Edit2.Text := JsonObject.Get('pwd', '');
   Edit3.Text := JsonObject.Get('file', '');
   Edit4.Text := JsonObject.Get('sheet', '');
   Edit5.Text := JsonObject.Get('column', '');
   Edit6.Text := JsonObject.Get('line', '');
-  Edit7.Text := JsonObject.Get('URLlogin', '');
-  Edit8.Text := JsonObject.Get('URLrota', '');
-  Edit9.Text := JsonObject.Get('log', '');
+  ArquivoLog := JsonObject.Get('log', '');
+  Edit9.Text := ArquivoLog;
 end;
 
 procedure TForm1.TrayIcon1DblClick(Sender: TObject);

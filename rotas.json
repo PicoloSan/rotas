@@ -1,11 +1,7 @@
 {
-  "usr" : "usuario",
-  "pwd" : "senha",
   "file" : "planilha.xlsx",
   "sheet" : "Planilha1",
   "column" : "A",
   "line" : "2",
-  "URLlogin" : "https://www.site.com.br",
-  "URLrota" : "https://www.site.com.br/pagina",
   "log" : "rotas.log"
 }
